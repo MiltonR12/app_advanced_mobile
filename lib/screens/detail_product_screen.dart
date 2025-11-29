@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:app_advanced_mobile/domain/entities/product.dart';
 import 'package:app_advanced_mobile/providers/product_provider.dart';
 import 'package:app_advanced_mobile/widgets/alert_message.dart';
+import 'package:app_advanced_mobile/widgets/drop_down_button_custom.dart';
 import 'package:app_advanced_mobile/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +20,16 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _quantityController;
+  late TextEditingController _priceController;
 
   @override
   void initState() {
     super.initState();
     _quantityController = TextEditingController(
       text: widget.product.quantity.toString(),
+    );
+    _priceController = TextEditingController(
+      text: widget.product.price.toStringAsFixed(2),
     );
   }
 
@@ -36,6 +41,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
     provider.updateProduct(
       widget.product.id,
       quantity: int.parse(_quantityController.text),
+      price: double.parse(_priceController.text),
     );
 
     Navigator.pop(context);
@@ -84,6 +90,18 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   width: double.infinity,
                   height: 150,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 150,
+                      color: const Color.fromARGB(255, 231, 231, 231),
+                      child: const Icon(
+                        Icons.image_not_supported,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
+                    );
+                  },
                 ),
               ),
 
@@ -97,12 +115,17 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
 
               TextFieldCustom(
                 labelText: "Precio",
-                enabled: false,
-                controller: TextEditingController(
-                  text: widget.product.price.toString(),
-                ),
+                controller: _priceController,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Ingresa un precio";
+                  }
+                  if (double.tryParse(value) == null) return "Precio inválido";
+                  return null;
+                },
               ),
-
+              const SizedBox(height: 20),
               TextFieldCustom(
                 labelText: "Cantidad",
                 keyboardType: TextInputType.number,
@@ -115,7 +138,15 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   return null;
                 },
               ),
-
+              const SizedBox(height: 20),
+              DropDownButtonCustom<ProductCategory>(
+                items: ProductCategory.values
+                    .map(
+                      (cat) =>
+                          DropdownMenuItem(value: cat, child: Text(cat.name)),
+                    )
+                    .toList(),
+              ),
               const SizedBox(height: 30),
               AlertMessage(confirmDelete: _confirmDelete),
               const SizedBox(height: 30),

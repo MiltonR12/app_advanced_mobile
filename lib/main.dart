@@ -29,12 +29,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(
-      light: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-      ),
-      dark: ThemeData(brightness: Brightness.dark, primarySwatch: Colors.blue),
-      initial: AdaptiveThemeMode.dark,
+      light: ThemeData(brightness: Brightness.light, primarySwatch: Colors.red),
+      dark: ThemeData(brightness: Brightness.light, primarySwatch: Colors.red),
+      initial: AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Gestor de Compras',

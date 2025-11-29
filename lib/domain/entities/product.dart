@@ -3,7 +3,7 @@ enum ProductCategory { frutas, verduras, carnes, lacteos, bebidas }
 class Product {
   final String id;
   final String name;
-  final double price;
+  double price;
   String? imageUrl;
   final ProductCategory category;
   bool isFavorite;

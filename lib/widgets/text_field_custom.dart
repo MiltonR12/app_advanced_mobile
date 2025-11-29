@@ -9,6 +9,7 @@ class TextFieldCustom extends StatelessWidget {
     this.keyboardType,
     this.enabled,
     this.controller,
+    this.initialValue,
   });
 
   final String labelText;
@@ -17,6 +18,7 @@ class TextFieldCustom extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool? enabled;
   final TextEditingController? controller;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class TextFieldCustom extends StatelessWidget {
       onSaved: onSaved,
       keyboardType: keyboardType,
       enabled: enabled,
+      initialValue: controller == null ? initialValue : null,
     );
   }
 }

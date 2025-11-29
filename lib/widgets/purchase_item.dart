@@ -17,14 +17,18 @@ class PurchaseItem extends StatelessWidget {
         height: 50,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          return const Icon(Icons.image_not_supported);
+          return const Icon(Icons.image, weight: 50, size: 50);
         },
       ),
       title: Text(purchase.item.name),
       subtitle: Text('Fecha: ${purchase.date.toString().split(' ')[0]}'),
       trailing: Text(
         '- Bs. ${purchase.amount.toStringAsFixed(2)}',
-        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.red,
+          fontSize: 16,
+        ),
       ),
     );
   }

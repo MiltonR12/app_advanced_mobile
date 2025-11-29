@@ -12,7 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key});
+  final Product? initialProduct;
+  const AddProductScreen({super.key, this.initialProduct});
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -40,6 +41,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.initialProduct != null) {
+      final product = widget.initialProduct!;
+      _name = product.name;
+      _price = product.price;
+      _category = product.category;
+      if (product.imageUrl != null) {
+        _selectedImage = File(product.imageUrl!);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final productProvider = context.read<ProductProvider>();
     final incomeProvider = context.read<ProfileProvider>();
@@ -56,6 +71,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               SelectPickerImage(
                 pickImage: pickImage,
                 selectedImage: _selectedImage,
+                initialImageUrl: widget.initialProduct?.imageUrl,
               ),
               const SizedBox(height: 32),
               TextFieldCustom(
@@ -67,6 +83,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   return null;
                 },
                 onSaved: (value) => _name = value!,
+                initialValue: _name,
               ),
               const SizedBox(height: 16),
               TextFieldCustom(
@@ -79,6 +96,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   return null;
                 },
                 onSaved: (value) => _price = double.parse(value!),
+                initialValue: _price != 0.0 ? _price.toString() : null,
               ),
               const SizedBox(height: 16),
               TextFieldCustom(
@@ -103,6 +121,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 onChanged: (value) => _category = value,
                 validator: (value) =>
                     value == null ? 'Selecciona una categoría' : null,
+                initialValue: _category,
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -123,6 +142,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       item: newProduct,
                       amount: _price * _quantity,
                     );
+
+                    if (incomeProvider.balance < purchase.amount) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Saldo insuficiente para esta compra'),
+                        ),
+                      );
+                      return;
+                    }
 
                     productProvider.addProduct(newProduct);
                     incomeProvider.reduceBalance(_price * _quantity);

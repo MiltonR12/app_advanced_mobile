@@ -1,5 +1,7 @@
 import 'package:app_advanced_mobile/providers/purchase_provider.dart';
+import 'package:app_advanced_mobile/widgets/app_bar_custom.dart';
 import 'package:app_advanced_mobile/widgets/purchase_item.dart';
+import 'package:app_advanced_mobile/widgets/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -59,25 +61,14 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Historial de Compras')),
+      appBar: AppBarCustom(title: 'Historial de Compras'),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Buscar por nombre...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() => searchQuery = value);
-              },
-            ),
+          SearchField(
+            onChanged: (value) {
+              setState(() => searchQuery = value);
+            },
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: DropdownButtonFormField<String>(

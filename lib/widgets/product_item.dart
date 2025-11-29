@@ -25,8 +25,13 @@ class ProductItem extends StatelessWidget {
           return const Icon(Icons.image_not_supported, size: 50);
         },
       ),
-      title: Text(product.name),
-      subtitle: Text('Cantidad: 2 | Precio: ${product.price} Bs'),
+      title: Text(
+        product.name.toUpperCase(),
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        'Cantidad: ${product.quantity} \nPrecio: ${product.price.toStringAsFixed(2)} Bs',
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

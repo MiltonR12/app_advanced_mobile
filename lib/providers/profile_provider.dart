@@ -5,7 +5,7 @@ class ProfileProvider extends ChangeNotifier {
   String name = "Usuario";
   String? photoUrl;
 
-  double _balance = 0;
+  double _balance = 12345;
   double get balance => _balance;
 
   final List<Income> _incomes = [];

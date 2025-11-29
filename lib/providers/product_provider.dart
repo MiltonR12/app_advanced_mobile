@@ -3,9 +3,53 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
 class ProductProvider extends ChangeNotifier {
-  final List<Product> _products = [];
+  final List<Product> _products = [
+    Product(
+      id: '1',
+      name: 'Sandia',
+      price: 999.99,
+      quantity: 10,
+      category: ProductCategory.frutas,
+      imageUrl: null,
+    ),
+    Product(
+      id: '2',
+      name: 'Carne',
+      price: 49.99,
+      quantity: 25,
+      category: ProductCategory.carnes,
+      imageUrl: null,
+    ),
+    Product(
+      id: '3',
+      name: 'Manzanas',
+      price: 2.99,
+      quantity: 100,
+      category: ProductCategory.frutas,
+      isFavorite: true,
+      imageUrl: null,
+    ),
+    Product(
+      id: '4',
+      name: 'Leche',
+      price: 3.49,
+      quantity: 50,
+      isFavorite: true,
+      category: ProductCategory.lacteos,
+      imageUrl: null,
+    ),
+    Product(
+      id: '5',
+      name: 'Tomate',
+      price: 1.99,
+      quantity: 80,
+      category: ProductCategory.verduras,
+      imageUrl: null,
+    ),
+  ];
 
   List<Product> get products => List.unmodifiable(_products);
+
   List<Product> get favoriteProducts =>
       _products.where((product) => product.isFavorite).toList();
 
@@ -34,11 +78,12 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(String id, {int? quantity, String? imageUrl}) {
-    Product? product = isProductNameExists(id);
+  void updateProduct(String id, {int? quantity, double? price}) {
+    final product = _products.firstWhereOrNull((product) => product.id == id);
     if (product == null) return;
+
     if (quantity != null) product.quantity = quantity;
-    if (imageUrl != null) product.imageUrl = imageUrl;
+    if (price != null) product.price = price;
 
     notifyListeners();
   }

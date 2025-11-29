@@ -1,4 +1,5 @@
 import 'package:app_advanced_mobile/providers/profile_provider.dart';
+import 'package:app_advanced_mobile/widgets/app_bar_custom.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
     final profile = Provider.of<ProfileProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Perfil')),
+      appBar: AppBarCustom(title: 'Perfil'),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddIncomeDialog(context),
         child: const Icon(Icons.add),

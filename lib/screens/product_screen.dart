@@ -1,11 +1,13 @@
 import 'package:app_advanced_mobile/providers/product_provider.dart';
 import 'package:app_advanced_mobile/providers/profile_provider.dart';
 import 'package:app_advanced_mobile/screens/add_product_screen.dart';
+import 'package:app_advanced_mobile/widgets/app_bar_custom.dart';
 import 'package:app_advanced_mobile/widgets/product_item.dart';
 import 'package:app_advanced_mobile/widgets/search_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+enum ProductCategory { frutas, verduras, carnes, lacteos, bebidas }
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
@@ -17,12 +19,20 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   final TextEditingController _searchController = TextEditingController();
 
+  ProductCategory? selectedCategory;
+
+  final Map<ProductCategory, String> categoryLabels = {
+    ProductCategory.frutas: "Frutas",
+    ProductCategory.verduras: "Verduras",
+    ProductCategory.carnes: "Carnes",
+    ProductCategory.lacteos: "Lácteos",
+    ProductCategory.bebidas: "Bebidas",
+  };
+
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(() {
-      setState(() {});
-    });
+    _searchController.addListener(() => setState(() {}));
   }
 
   @override
@@ -38,14 +48,25 @@ class _ProductScreenState extends State<ProductScreen> {
 
     final query = _searchController.text.toLowerCase();
 
+    print(
+      "Rebuilding ProductScreen with query: $query and selectedCategory: $selectedCategory",
+    );
+
     final filteredProducts = products.where((product) {
-      return product.name.toLowerCase().contains(query);
+      final matchesSearch = product.name.toLowerCase().contains(query);
+
+      final matchesCategory =
+          selectedCategory == null ||
+          product.category.toString() == selectedCategory.toString();
+
+      return matchesSearch && matchesCategory;
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Lista de Productos')),
+      appBar: AppBarCustom(title: 'Lista de Productos'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -61,19 +82,62 @@ class _ProductScreenState extends State<ProductScreen> {
               onChanged: (_) => setState(() {}),
             ),
 
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredProducts.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: ProductItem(
-                      index: index,
-                      product: filteredProducts[index],
-                    ),
-                  );
-                },
+            const SizedBox(height: 10),
+
+            // 🔥 CHIPS DE CATEGORÍA
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  ChoiceChip(
+                    label: const Text("Todos"),
+                    selected: selectedCategory == null,
+                    onSelected: (_) {
+                      setState(() {
+                        selectedCategory = null;
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 8),
+
+                  ...categoryLabels.entries.map((entry) {
+                    final category = entry.key;
+                    final label = entry.value;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(label),
+                        selected: selectedCategory == category,
+                        onSelected: (_) {
+                          setState(() {
+                            selectedCategory = category;
+                          });
+                        },
+                      ),
+                    );
+                  }),
+                ],
               ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Expanded(
+              child: filteredProducts.isEmpty
+                  ? const Center(child: Text('No se encontraron productos'))
+                  : ListView.builder(
+                      itemCount: filteredProducts.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: ProductItem(
+                            index: index,
+                            product: filteredProducts[index],
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
         ),
