@@ -71,7 +71,6 @@ class _ProductScreenState extends State<ProductScreen> {
               'Monto Disponible: \$${incomeProvider.balance.toStringAsFixed(2)}',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
 
             SearchField(
               controller: _searchController,

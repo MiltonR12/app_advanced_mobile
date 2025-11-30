@@ -19,15 +19,11 @@ class DetailProductScreen extends StatefulWidget {
 class _DetailProductScreenState extends State<DetailProductScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  late TextEditingController _quantityController;
   late TextEditingController _priceController;
 
   @override
   void initState() {
     super.initState();
-    _quantityController = TextEditingController(
-      text: widget.product.quantity.toString(),
-    );
     _priceController = TextEditingController(
       text: widget.product.price.toStringAsFixed(2),
     );
@@ -40,7 +36,6 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
 
     provider.updateProduct(
       widget.product.id,
-      quantity: int.parse(_quantityController.text),
       price: double.parse(_priceController.text),
     );
 
@@ -122,19 +117,6 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                     return "Ingresa un precio";
                   }
                   if (double.tryParse(value) == null) return "Precio inválido";
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFieldCustom(
-                labelText: "Cantidad",
-                keyboardType: TextInputType.number,
-                controller: _quantityController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Ingresa una cantidad";
-                  }
-                  if (int.tryParse(value) == null) return "Cantidad inválida";
                   return null;
                 },
               ),

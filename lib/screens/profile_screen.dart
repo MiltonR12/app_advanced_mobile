@@ -23,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
-            onPressed: () => themeProvider.toggleTheme(),
+            onPressed: () => themeProvider.toggleTheme(context),
             child: Icon(
               themeProvider.theme == AppTheme.dark
                   ? Icons.light_mode

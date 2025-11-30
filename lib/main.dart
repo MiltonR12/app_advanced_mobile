@@ -30,22 +30,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-
     return AdaptiveTheme(
       light: ThemeData(brightness: Brightness.light, primarySwatch: Colors.red),
       dark: ThemeData(brightness: Brightness.dark, primarySwatch: Colors.red),
-      initial: themeProvider.theme == AppTheme.light
-          ? AdaptiveThemeMode.light
-          : AdaptiveThemeMode.dark,
+      initial: AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Gestor de Compras',
-        theme: themeProvider.theme == AppTheme.light ? theme : darkTheme,
+        theme: theme,
         darkTheme: darkTheme,
-        themeMode: themeProvider.theme == AppTheme.light
-            ? ThemeMode.light
-            : ThemeMode.dark,
         home: const MainScreen(),
       ),
     );

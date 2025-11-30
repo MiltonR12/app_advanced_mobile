@@ -23,7 +23,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
   double _price = 0.0;
-  int _quantity = 0;
   ProductCategory? _category;
 
   File? _selectedImage;
@@ -99,18 +98,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 initialValue: _price != 0.0 ? _price.toString() : null,
               ),
               const SizedBox(height: 16),
-              TextFieldCustom(
-                labelText: 'Cantidad',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return 'Ingresa una cantidad';
-                  if (int.tryParse(value) == null) return 'Cantidad inválida';
-                  return null;
-                },
-                onSaved: (value) => _quantity = int.parse(value!),
-              ),
-              const SizedBox(height: 16),
               DropDownButtonCustom<ProductCategory>(
                 items: ProductCategory.values
                     .map(
@@ -135,13 +122,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       price: _price,
                       imageUrl: _selectedImage?.path,
                       category: _category!,
-                      quantity: _quantity,
+                      isFavorite: widget.initialProduct?.isFavorite ?? false,
                     );
 
-                    final purchase = Purchase(
-                      item: newProduct,
-                      amount: _price * _quantity,
-                    );
+                    final purchase = Purchase(item: newProduct, amount: _price);
 
                     if (incomeProvider.balance < purchase.amount) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -153,7 +137,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
 
                     productProvider.addProduct(newProduct);
-                    incomeProvider.reduceBalance(_price * _quantity);
+                    incomeProvider.reduceBalance(_price);
                     purchaseProvider.addPurchase(purchase);
 
                     Navigator.pop(context);
