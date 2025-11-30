@@ -146,6 +146,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           DropdownMenuItem(value: cat, child: Text(cat.name)),
                     )
                     .toList(),
+                initialValue: widget.product.category,
               ),
               const SizedBox(height: 30),
               AlertMessage(confirmDelete: _confirmDelete),

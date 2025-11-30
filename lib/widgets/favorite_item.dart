@@ -32,7 +32,6 @@ class FavoriteItem extends StatelessWidget {
       trailing: IconButton(
         icon: Icon(Icons.add_shopping_cart),
         onPressed: () {
-          print("Editar producto: ${product.name}");
           Navigator.push(
             context,
             MaterialPageRoute(

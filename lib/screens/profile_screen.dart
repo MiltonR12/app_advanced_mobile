@@ -1,4 +1,5 @@
 import 'package:app_advanced_mobile/providers/profile_provider.dart';
+import 'package:app_advanced_mobile/providers/theme_provider.dart';
 import 'package:app_advanced_mobile/widgets/app_bar_custom.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,27 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profile = Provider.of<ProfileProvider>(context);
+    final themeProvider = context.read<ThemeProvider>();
 
     return Scaffold(
       appBar: AppBarCustom(title: 'Perfil'),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddIncomeDialog(context),
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        children: [
+          const Spacer(),
+          FloatingActionButton(
+            onPressed: () => _showAddIncomeDialog(context),
+            child: const Icon(Icons.monetization_on_sharp),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: () => themeProvider.toggleTheme(),
+            child: Icon(
+              themeProvider.theme == AppTheme.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

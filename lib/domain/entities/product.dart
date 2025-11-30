@@ -8,6 +8,7 @@ class Product {
   final ProductCategory category;
   bool isFavorite;
   int quantity;
+  bool isSelected = false;
 
   Product({
     required this.id,
@@ -17,5 +18,6 @@ class Product {
     required this.category,
     this.isFavorite = false,
     this.quantity = 0,
+    this.isSelected = false,
   });
 }

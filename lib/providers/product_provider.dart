@@ -47,11 +47,15 @@ class ProductProvider extends ChangeNotifier {
       imageUrl: null,
     ),
   ];
+  final List<Product> _favoriteProducts = [];
 
   List<Product> get products => List.unmodifiable(_products);
 
-  List<Product> get favoriteProducts =>
-      _products.where((product) => product.isFavorite).toList();
+  List<Product> get favoriteProducts => _favoriteProducts;
+
+  bool get isExistFavorite => _favoriteProducts.isNotEmpty;
+
+  bool get isExistSelected => _products.any((product) => product.isSelected);
 
   void addProduct(Product product) {
     Product? existingProduct = isProductNameExists(product.name);
@@ -61,6 +65,12 @@ class ProductProvider extends ChangeNotifier {
     } else {
       addQuantity(existingProduct.id, product.quantity);
     }
+  }
+
+  void toggleSelectionStatus(String id, bool isSelected) {
+    final product = _products.firstWhere((product) => product.id == id);
+    product.isSelected = isSelected;
+    notifyListeners();
   }
 
   Product? isProductNameExists(String name) {
@@ -91,6 +101,18 @@ class ProductProvider extends ChangeNotifier {
   void toggleFavoriteStatus(String id) {
     final product = _products.firstWhere((product) => product.id == id);
     product.isFavorite = !product.isFavorite;
+
+    if (product.isFavorite) {
+      _favoriteProducts.add(product);
+    } else {
+      _favoriteProducts.removeWhere((favProduct) => favProduct.id == id);
+    }
+
+    notifyListeners();
+  }
+
+  void clearSelection() {
+    _products.removeWhere((product) => product.isSelected);
     notifyListeners();
   }
 }

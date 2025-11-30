@@ -44,14 +44,11 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     final products = context.watch<ProductProvider>().products;
+    final isExistSelected = context.watch<ProductProvider>().isExistSelected;
+    final productProvider = context.read<ProductProvider>();
     final incomeProvider = context.watch<ProfileProvider>();
 
     final query = _searchController.text.toLowerCase();
-
-    print(
-      "Rebuilding ProductScreen with query: $query and selectedCategory: $selectedCategory",
-    );
-
     final filteredProducts = products.where((product) {
       final matchesSearch = product.name.toLowerCase().contains(query);
 
@@ -74,7 +71,6 @@ class _ProductScreenState extends State<ProductScreen> {
               'Monto Disponible: \$${incomeProvider.balance.toStringAsFixed(2)}',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-
             const SizedBox(height: 16),
 
             SearchField(
@@ -84,7 +80,6 @@ class _ProductScreenState extends State<ProductScreen> {
 
             const SizedBox(height: 10),
 
-            // 🔥 CHIPS DE CATEGORÍA
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -123,11 +118,24 @@ class _ProductScreenState extends State<ProductScreen> {
 
             const SizedBox(height: 16),
 
+            (isExistSelected)
+                ? ElevatedButton(
+                    onPressed: () => productProvider.clearSelection(),
+                    child: Text(
+                      'Tienes productos favoritos',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+
+            const SizedBox(height: 16),
+
             Expanded(
               child: filteredProducts.isEmpty
                   ? const Center(child: Text('No se encontraron productos'))
                   : ListView.builder(
                       itemCount: filteredProducts.length,
+                      padding: const EdgeInsets.only(bottom: 40),
                       itemBuilder: (context, index) {
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8),

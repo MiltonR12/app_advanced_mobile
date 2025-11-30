@@ -1,6 +1,7 @@
 import 'package:app_advanced_mobile/providers/product_provider.dart';
 import 'package:app_advanced_mobile/providers/profile_provider.dart';
 import 'package:app_advanced_mobile/providers/purchase_provider.dart';
+import 'package:app_advanced_mobile/providers/theme_provider.dart';
 import 'package:app_advanced_mobile/screens/favorite_screem.dart';
 import 'package:app_advanced_mobile/screens/product_screen.dart';
 import 'package:app_advanced_mobile/screens/profile_screen.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => PurchaseProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const MyApp(),
     ),
@@ -28,14 +30,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+
     return AdaptiveTheme(
       light: ThemeData(brightness: Brightness.light, primarySwatch: Colors.red),
-      dark: ThemeData(brightness: Brightness.light, primarySwatch: Colors.red),
-      initial: AdaptiveThemeMode.light,
+      dark: ThemeData(brightness: Brightness.dark, primarySwatch: Colors.red),
+      initial: themeProvider.theme == AppTheme.light
+          ? AdaptiveThemeMode.light
+          : AdaptiveThemeMode.dark,
       builder: (theme, darkTheme) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Gestor de Compras',
-        theme: darkTheme,
+        theme: themeProvider.theme == AppTheme.light ? theme : darkTheme,
+        darkTheme: darkTheme,
+        themeMode: themeProvider.theme == AppTheme.light
+            ? ThemeMode.light
+            : ThemeMode.dark,
         home: const MainScreen(),
       ),
     );
