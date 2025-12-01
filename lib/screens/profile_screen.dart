@@ -36,7 +36,6 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // FOTO + NOMBRE
             Center(
               child: Column(
                 children: [
@@ -63,7 +62,6 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // SALDO DISPONIBLE
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -92,7 +90,6 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // LISTA DE INGRESOS
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -131,9 +128,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // -------------------------------
-  // DIALOGO PARA AGREGAR INGRESOS
-  // -------------------------------
   void _showAddIncomeDialog(BuildContext context) {
     final controller = TextEditingController();
 

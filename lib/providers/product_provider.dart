@@ -7,12 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductProvider extends ChangeNotifier {
   List<Product> _products = [];
+  List<Product> _favorites = [];
   List<Product> get products => List.unmodifiable(_products);
 
-  List<Product> get favoriteProducts =>
-      _products.where((p) => p.isFavorite).toList();
+  List<Product> get favoriteProducts => List.unmodifiable(_favorites);
 
-  bool get isExistFavorite => favoriteProducts.isNotEmpty;
+  bool get isExistFavorite => _favorites.any((product) => product.isFavorite);
 
   bool get isExistSelected => _products.any((product) => product.isSelected);
 
@@ -72,9 +72,7 @@ class ProductProvider extends ChangeNotifier {
   }
 
   void clearSelection() {
-    for (var product in _products) {
-      product.isSelected = false;
-    }
+    _products.removeWhere((product) => product.isSelected);
     _saveProducts();
     notifyListeners();
   }
@@ -83,8 +81,14 @@ class ProductProvider extends ChangeNotifier {
     final product = _products.firstWhere(
       (p) => p.name.toLowerCase() == name.toLowerCase(),
     );
-
     product.isFavorite = !product.isFavorite;
+
+    if (product.isFavorite) {
+      _favorites.add(product);
+    } else {
+      _favorites.removeWhere((p) => p.name.toLowerCase() == name.toLowerCase());
+    }
+
     _saveProducts();
     notifyListeners();
   }
